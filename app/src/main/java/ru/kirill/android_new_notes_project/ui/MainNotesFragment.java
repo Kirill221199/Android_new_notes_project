@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import ru.kirill.android_new_notes_project.R;
+import ru.kirill.android_new_notes_project.repo.CardData;
 import ru.kirill.android_new_notes_project.repo.LocalRepository;
 
 public class MainNotesFragment extends Fragment implements OnItemClickListener {
@@ -41,17 +43,17 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         notesAdapter = new NotesAdapter();
         LocalRepository localRepository = new LocalRepository(requireContext().getResources());
         notesAdapter.setDataSource(localRepository.init());
-        notesAdapter.setOnItemClickListener(this);
+        notesAdapter.setOnItemClickListener(MainNotesFragment.this);
     }
 
     public void initRecycler(View view){
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setAdapter(notesAdapter);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(notesAdapter);
     }
 
     @Override
     public void onItemClick(int position) {
-        //реализация
+        Toast.makeText(requireContext(),"Нажали на элемент",Toast.LENGTH_LONG).show();
     }
 }
