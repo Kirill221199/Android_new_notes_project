@@ -1,4 +1,4 @@
-package ui;
+package ru.kirill.android_new_notes_project.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,5 +12,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.activity_container,
+                    MainNotesFragment.newInstance()).commit();
+        }
     }
 }
