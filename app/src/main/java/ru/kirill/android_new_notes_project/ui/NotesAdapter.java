@@ -62,6 +62,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
             title = (TextView) itemView.findViewById(R.id.title_note);
             content = (TextView) itemView.findViewById(R.id.content_note);
             date =  (TextView) itemView.findViewById(R.id.date_note);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickListener.onItemClick(getLayoutPosition());
+                }
+            });
         }
 
         public void bindContentWithLayout(CardData data){

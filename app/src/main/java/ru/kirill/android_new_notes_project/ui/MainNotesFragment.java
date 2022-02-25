@@ -43,7 +43,8 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         notesAdapter = new NotesAdapter();
         LocalRepository localRepository = new LocalRepository(requireContext().getResources());
         notesAdapter.setDataSource(localRepository.init());
-        notesAdapter.setOnItemClickListener(MainNotesFragment.this);
+        notesAdapter.setOnItemClickListener(this);
+
     }
 
     public void initRecycler(View view){
@@ -54,6 +55,6 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(requireContext(),"Нажали на элемент",Toast.LENGTH_LONG).show();
+        Toast.makeText(requireContext(),"Нажали на элемент " + position,Toast.LENGTH_SHORT).show();
     }
 }
