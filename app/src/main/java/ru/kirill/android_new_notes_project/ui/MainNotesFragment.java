@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,8 +76,34 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        requireActivity().getMenuInflater().inflate(R.menu.context_menu_card, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int menuPosition = NotesAdapter.getMenuPosition();
+        switch (item.getItemId()) {
+            case (R.id.action_delete): {
+                data.deleteCardData(menuPosition);
+                notesAdapter.notifyItemRemoved(menuPosition);
+                return true;
+            }
+            case (R.id.action_update): {
+                data.updateCardData(menuPosition, new CardData("Update note " + (menuPosition +1),
+                        "Update note " +
+                        "content"));
+                notesAdapter.notifyItemChanged(menuPosition);
+                return true;
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
+
     public void initAdapter(){
-        notesAdapter = new NotesAdapter();
+        notesAdapter = new NotesAdapter(this);
         data = new LocalRepository(requireContext().getResources()).init();
         notesAdapter.setDataSource(data);
         notesAdapter.setOnItemClickListener(this);

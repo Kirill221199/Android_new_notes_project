@@ -16,6 +16,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
 
     protected CardSource cardSource;
     OnItemClickListener onItemClickListener;
+    MainNotesFragment fragment;
+    protected static int menuPosition;
+
+    public static int getMenuPosition() {
+        return menuPosition;
+    }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this. onItemClickListener = onItemClickListener;
@@ -28,6 +34,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
 
     public NotesAdapter(CardSource cardSource) {
         this.cardSource = cardSource;
+    }
+
+    public NotesAdapter(MainNotesFragment fragment) {
+        this.fragment = fragment;
     }
 
     public NotesAdapter() {
@@ -68,6 +78,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
                     onItemClickListener.onItemClick(getLayoutPosition());
                 }
             });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    menuPosition = getLayoutPosition();
+                    return false;
+                }
+            });
+            fragment.registerForContextMenu(itemView);
         }
 
         public void bindContentWithLayout(CardData data){
