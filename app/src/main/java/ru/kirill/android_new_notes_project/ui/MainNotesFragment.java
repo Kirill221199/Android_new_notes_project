@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.ContextMenu;
@@ -26,6 +27,7 @@ import ru.kirill.android_new_notes_project.repo.LocalRepository;
 public class MainNotesFragment extends Fragment implements OnItemClickListener {
 
     NotesAdapter notesAdapter;
+    RecyclerView recyclerView;
     CardSource data;
 
     public static MainNotesFragment newInstance() {
@@ -60,6 +62,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
             case (R.id.action_add_note) : {
                 data.addCardData(new CardData("New note " + (data.size()+1), "Content New note"));
                 notesAdapter.notifyItemInserted((data.size()-1));
+                recyclerView.smoothScrollToPosition((data.size()-1));
                 return true;
             }
             case (R.id.action_clear_all) : {
@@ -98,6 +101,10 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
                 notesAdapter.notifyItemChanged(menuPosition);
                 return true;
             }
+            case (R.id.action_send): {
+                Toast.makeText(requireContext(),"Note "+ (menuPosition +1) +" send...",
+                        Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onContextItemSelected(item);
     }
@@ -107,13 +114,18 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         data = new LocalRepository(requireContext().getResources()).init();
         notesAdapter.setDataSource(data);
         notesAdapter.setOnItemClickListener(this);
-
     }
 
     public void initRecycler(View view){
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(notesAdapter);
+
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setChangeDuration(1000);
+        animator.setRemoveDuration(1000);
+        animator.setAddDuration(1000);
+        recyclerView.setItemAnimator(animator);
     }
 
     @Override
