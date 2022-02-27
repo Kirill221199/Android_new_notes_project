@@ -41,4 +41,24 @@ public class LocalRepository implements CardSource{
     public CardData getCardData(int position) {
         return dataSource.get(position);
     }
+
+    @Override
+    public void ClearAllCardsData() {
+        dataSource.clear();
+    }
+
+    @Override
+    public void addCardData(CardData cardData) {
+        dataSource.add(cardData);
+    }
+
+    @Override
+    public void deleteCardData(int position) {
+        dataSource.remove(position);
+    }
+
+    @Override
+    public void updateCardData(int position, CardData newCardData) {
+        dataSource.set(position, newCardData);
+    }
 }

@@ -6,4 +6,9 @@ public interface CardSource {
     int size();
     List<CardData> getAllCardsData();
     CardData getCardData(int position);
+    public void ClearAllCardsData();
+    public void addCardData(CardData cardData);
+    public void deleteCardData (int position);
+    public void updateCardData(int position, CardData newCardData);
+
 }

@@ -12,6 +12,16 @@
         <item>Note 8</item>
         <item>Note 9</item>
         <item>Note 10</item>
+        <item>Note 11</item>
+        <item>Note 12</item>
+        <item>Note 13</item>
+        <item>Note 14</item>
+        <item>Note 15</item>
+        <item>Note 16</item>
+        <item>Note 17</item>
+        <item>Note 18</item>
+        <item>Note 19</item>
+        <item>Note 20</item>
     </string-array>
 
     <string-array name="notesContent">
@@ -25,6 +35,16 @@
         <item>Content 8</item>
         <item>Content 9</item>
         <item>Content 10</item>
+        <item>Content 11</item>
+        <item>Content 12</item>
+        <item>Content 13</item>
+        <item>Content 14</item>
+        <item>Content 15</item>
+        <item>Content 16</item>
+        <item>Content 17</item>
+        <item>Content 18</item>
+        <item>Content 19</item>
+        <item>Content 19</item>
     </string-array>
 
 </resources>
