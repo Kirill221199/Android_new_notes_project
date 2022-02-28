@@ -1,5 +1,7 @@
 package ru.kirill.android_new_notes_project.ui;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -59,7 +63,13 @@ public class EditNote extends Fragment {
                 ((MainActivity) requireActivity()).getPublisher().sendMessage(cardData);
                 ((MainActivity) requireActivity()).getSupportFragmentManager().popBackStack();
 
+                hideKeyboard(requireContext());
             }
         });
     }
+
+    public static void hideKeyboard(Context ctx) {
+        InputMethodManager inputManager = (InputMethodManager) ctx .getSystemService(Context.INPUT_METHOD_SERVICE);
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null) return; inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0); }
 }
