@@ -29,6 +29,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     NotesAdapter notesAdapter;
     RecyclerView recyclerView;
     CardSource data;
+    DialogFragmentDeleteAll dialogFragmentDeleteAll;
 
     public static MainNotesFragment newInstance() {
         MainNotesFragment fragment = new MainNotesFragment();
@@ -66,8 +67,8 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
                 return true;
             }
             case (R.id.action_clear_all) : {
-                data.ClearAllCardsData();
-                notesAdapter.notifyDataSetChanged();
+                dialogFragmentDeleteAll = new DialogFragmentDeleteAll(data, notesAdapter);
+                dialogFragmentDeleteAll.show(getActivity().getSupportFragmentManager(), "tag");
                 return true;
             }
             case (R.id.action_about_developer) : {
