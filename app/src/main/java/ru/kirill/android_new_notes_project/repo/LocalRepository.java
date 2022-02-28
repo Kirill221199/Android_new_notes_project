@@ -3,6 +3,7 @@ package ru.kirill.android_new_notes_project.repo;
 import android.content.res.Resources;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import ru.kirill.android_new_notes_project.R;
@@ -22,7 +23,7 @@ public class LocalRepository implements CardSource{
         String[] content = resources.getStringArray(R.array.notesContent);
 
         for (int i = 0; i < titles.length; i++) {
-            dataSource.add(new CardData(titles[i],content[i]));
+            dataSource.add(new CardData(titles[i],content[i], Calendar.getInstance().getTime().toString()));
         }
         return this;
     }

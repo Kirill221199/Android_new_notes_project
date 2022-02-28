@@ -15,14 +15,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.zip.Inflater;
 
 import ru.kirill.android_new_notes_project.R;
 import ru.kirill.android_new_notes_project.repo.CardData;
 import ru.kirill.android_new_notes_project.repo.CardSource;
 import ru.kirill.android_new_notes_project.repo.LocalRepository;
+import ru.kirill.android_new_notes_project.ui.fragment_communication.Observer;
 
 public class MainNotesFragment extends Fragment implements OnItemClickListener {
 
@@ -30,6 +33,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     RecyclerView recyclerView;
     CardSource data;
     DialogFragmentDeleteAll dialogFragmentDeleteAll;
+    CardData cardData;
 
     public static MainNotesFragment newInstance() {
         MainNotesFragment fragment = new MainNotesFragment();
@@ -49,6 +53,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         initAdapter();
         initRecycler(view);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -61,7 +66,8 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case (R.id.action_add_note) : {
-                data.addCardData(new CardData("New note " + (data.size()+1), "Content New note"));
+                data.addCardData(new CardData("New note " + (data.size()+1), "Content New note",
+                        Calendar.getInstance().getTime().toString()));
                 notesAdapter.notifyItemInserted((data.size()-1));
                 recyclerView.smoothScrollToPosition((data.size()-1));
                 return true;
@@ -96,15 +102,22 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
                 return true;
             }
             case (R.id.action_update): {
-                data.updateCardData(menuPosition, new CardData("Update note " + (menuPosition +1),
-                        "Update note " +
-                        "content"));
-                notesAdapter.notifyItemChanged(menuPosition);
+                Observer observer = new Observer() {
+                    @Override
+                    public void receiveMessage(CardData cardData) {
+                        ((MainActivity) requireActivity()).getPublisher().unsubscribe(this);
+                        data.updateCardData(menuPosition, cardData);
+                        notesAdapter.notifyItemChanged(menuPosition);
+                    }
+                };
+                ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
+                ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.activity_container, EditNote.newInstance(data.getCardData(menuPosition))).addToBackStack(" ").commit();
                 return true;
             }
             case (R.id.action_send): {
                 Toast.makeText(requireContext(),"Note "+ (menuPosition +1) +" send...",
                         Toast.LENGTH_SHORT).show();
+                return true;
             }
         }
         return super.onContextItemSelected(item);
@@ -133,4 +146,5 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     public void onItemClick(int position) {
         Toast.makeText(requireContext(),"Нажали на элемент " + position,Toast.LENGTH_SHORT).show();
     }
+
 }

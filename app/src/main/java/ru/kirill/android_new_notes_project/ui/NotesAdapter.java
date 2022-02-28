@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Calendar;
+
 import ru.kirill.android_new_notes_project.R;
 import ru.kirill.android_new_notes_project.repo.CardData;
 import ru.kirill.android_new_notes_project.repo.CardSource;
@@ -91,7 +93,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         public void bindContentWithLayout(CardData data){
             title.setText(data.getTitle());
             content.setText(data.getContent());
-            date.setText("data");
+            date.setText(data.getDate());
         }
     }
 }
