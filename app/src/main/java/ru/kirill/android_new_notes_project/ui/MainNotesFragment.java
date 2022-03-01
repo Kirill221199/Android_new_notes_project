@@ -67,7 +67,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         switch (item.getItemId()){
             case (R.id.action_add_note) : {
                 data.addCardData(new CardData("New note " + (data.size()+1), "Content New note",
-                        Calendar.getInstance().getTime().toString()));
+                        myCalendar()));
                 notesAdapter.notifyItemInserted((data.size()-1));
                 recyclerView.smoothScrollToPosition((data.size()-1));
                 return true;
@@ -145,6 +145,25 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(int position) {
         Toast.makeText(requireContext(),"Нажали на элемент " + position,Toast.LENGTH_SHORT).show();
+    }
+
+    public String myCalendar() {
+        final Calendar calendar = Calendar.getInstance();
+        int yy = calendar.get(Calendar.YEAR);
+        int mm = calendar.get(Calendar.MONTH);
+        int dd = calendar.get(Calendar.DAY_OF_MONTH);
+        String ww = "day of week";
+
+        if (calendar.get(Calendar.DAY_OF_WEEK) == 1){ww = "Monday";}
+        else if (calendar.get(Calendar.DAY_OF_WEEK) == 2){ww = "Tuesday";}
+        else if (calendar.get(Calendar.DAY_OF_WEEK) == 3){ww = "Wednesday";}
+        else if (calendar.get(Calendar.DAY_OF_WEEK) == 4){ww = "Thursday";}
+        else if (calendar.get(Calendar.DAY_OF_WEEK) == 5){ww = "Friday";}
+        else if (calendar.get(Calendar.DAY_OF_WEEK) == 6){ww = "Saturday";}
+        else if (calendar.get(Calendar.DAY_OF_WEEK) == 7){ww = "Sunday";}
+
+        String date = "Date: " + dd + "." + mm + "." + yy + ", " + ww;
+        return date;
     }
 
 }
