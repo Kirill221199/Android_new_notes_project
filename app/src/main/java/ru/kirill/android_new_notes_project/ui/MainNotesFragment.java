@@ -66,7 +66,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case (R.id.action_add_note) : {
-                data.addCardData(new CardData("New note " + (data.size()+1), "Content New note",
+                data.addCardData(new CardData("Empty note " + (data.size()+1), "No content",
                         myCalendar()));
                 notesAdapter.notifyItemInserted((data.size()-1));
                 recyclerView.smoothScrollToPosition((data.size()-1));
@@ -102,16 +102,11 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
                 return true;
             }
             case (R.id.action_update): {
-                Observer observer = new Observer() {
-                    @Override
-                    public void receiveMessage(CardData cardData) {
-                        ((MainActivity) requireActivity()).getPublisher().unsubscribe(this);
-                        data.updateCardData(menuPosition, cardData);
-                        notesAdapter.notifyItemChanged(menuPosition);
-                    }
-                };
-                ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
-                ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.activity_container, EditNote.newInstance(data.getCardData(menuPosition))).addToBackStack(" ").commit();
+                data.updateCardData(menuPosition,
+                        new CardData("Empty note" + (menuPosition +1),
+                        "No content", myCalendar()));
+                notesAdapter.notifyItemChanged(menuPosition);
+                Toast.makeText(requireContext(),"Нажали на элемент " + menuPosition,Toast.LENGTH_SHORT).show();
                 return true;
             }
             case (R.id.action_send): {
@@ -144,7 +139,16 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(requireContext(),"Нажали на элемент " + position,Toast.LENGTH_SHORT).show();
+        Observer observer = new Observer() {
+            @Override
+            public void receiveMessage(CardData cardData) {
+                ((MainActivity) requireActivity()).getPublisher().unsubscribe(this);
+                data.updateCardData(position, cardData);
+                notesAdapter.notifyItemChanged(position);
+            }
+        };
+        ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
+        ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.activity_container, EditNote.newInstance(data.getCardData(position))).addToBackStack(" ").commit();
     }
 
     public String myCalendar() {

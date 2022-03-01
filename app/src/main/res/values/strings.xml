@@ -6,7 +6,7 @@
     <string name="delete_all_notes">Delete all notes</string>
     <string name="add_note">Add note</string>
     <string name="info_text">Hello, this section will describe information about the developer</string>
-    <string name="update">Change</string>
+    <string name="update">Clear</string>
     <string name="delete_note">Delete note</string>
     <string name="save">Save</string>
 </resources>
