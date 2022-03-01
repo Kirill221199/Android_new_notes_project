@@ -2,6 +2,11 @@
 <resources>
     <dimen name="title_size">30sp</dimen>
     <dimen name="content_size">25sp</dimen>
-    <dimen name="date_size">15sp</dimen>
+    <dimen name="date_size">25sp</dimen>
     <dimen name="info_size">20sp</dimen>
+    <dimen name="space">20dp</dimen>
+    <dimen name="space_card">5dp</dimen>
+    <dimen name="size_content_card">20sp</dimen>
+    <dimen name="size_date_card">15sp</dimen>
+    <dimen name="size_title_card">25sp</dimen>
 </resources>
