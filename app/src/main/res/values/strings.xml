@@ -9,4 +9,8 @@
     <string name="update">Clear</string>
     <string name="delete_note">Delete note</string>
     <string name="save">Save</string>
+    <string name="gf">gf</string>
+    <string name="sp">sp</string>
+    <string name="array">array</string>
+    <string name="data_source">Data source</string>
 </resources>

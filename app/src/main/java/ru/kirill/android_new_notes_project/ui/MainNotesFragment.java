@@ -1,13 +1,8 @@
 package ru.kirill.android_new_notes_project.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,11 +10,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.Calendar;
-import java.util.zip.Inflater;
 
 import ru.kirill.android_new_notes_project.R;
 import ru.kirill.android_new_notes_project.repo.CardData;
@@ -53,7 +53,63 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         initAdapter();
         initRecycler(view);
         setHasOptionsMenu(true);
+        initRadioGroup(view);
+    }
 
+    public void initRadioGroup(View view) {
+        view.findViewById(R.id.rbtn_array).setOnClickListener(listener);
+        view.findViewById(R.id.rbtn_sp).setOnClickListener(listener);
+        view.findViewById(R.id.rbtn_gf).setOnClickListener(listener);
+
+        switch (getCurrentSource()) {
+            case SOURCE_ARRAY:
+                ((RadioButton) view.findViewById(R.id.rbtn_array)).setChecked(true);
+                break;
+            case SOURCE_SP:
+                ((RadioButton) view.findViewById(R.id.rbtn_sp)).setChecked(true);
+                break;
+            case SOURCE_GF:
+                ((RadioButton) view.findViewById(R.id.rbtn_gf)).setChecked(true);
+                break;
+        }
+    }
+
+    public static final int SOURCE_ARRAY = 1;
+    public static final int SOURCE_SP = 2;
+    public static final int SOURCE_GF = 3;
+
+    View.OnClickListener listener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (getId()) {
+                case (R.id.rbtn_array):
+                    setCurrentSource(SOURCE_ARRAY);
+                    break;
+                case (R.id.rbtn_sp):
+                    setCurrentSource(SOURCE_SP);
+                    break;
+                case (R.id.rbtn_gf):
+                    setCurrentSource(SOURCE_GF);
+                    break;
+            }
+        }
+    };
+
+    static String KEY_SP = "key_1";
+    static String KEY_SP_CELL = "cell_1";
+
+    public void setCurrentSource(int currentSource) {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(KEY_SP,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_SP_CELL, currentSource);
+        editor.apply();
+    }
+
+    public int getCurrentSource() {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(KEY_SP,
+                Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_SP_CELL, SOURCE_ARRAY);
     }
 
     @Override
@@ -64,7 +120,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case (R.id.action_add_note) : {
                 data.addCardData(new CardData("Empty note " + (data.size()+1), "No content",
                         myCalendar()));
