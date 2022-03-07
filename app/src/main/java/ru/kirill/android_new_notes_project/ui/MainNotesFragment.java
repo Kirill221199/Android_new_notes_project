@@ -81,14 +81,14 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            switch (getId()) {
-                case (R.id.rbtn_array):
+            switch (view.getId()) {
+                case R.id.rbtn_array:
                     setCurrentSource(SOURCE_ARRAY);
                     break;
-                case (R.id.rbtn_sp):
+                case R.id.rbtn_sp:
                     setCurrentSource(SOURCE_SP);
                     break;
-                case (R.id.rbtn_gf):
+                case R.id.rbtn_gf:
                     setCurrentSource(SOURCE_GF);
                     break;
             }
@@ -159,10 +159,9 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
             }
             case (R.id.action_update): {
                 data.updateCardData(menuPosition,
-                        new CardData("Empty note" + (menuPosition +1),
+                        new CardData("Empty note " + (menuPosition +1),
                         "No content", myCalendar()));
                 notesAdapter.notifyItemChanged(menuPosition);
-                Toast.makeText(requireContext(),"Нажали на элемент " + menuPosition,Toast.LENGTH_SHORT).show();
                 return true;
             }
             case (R.id.action_send): {
