@@ -25,6 +25,7 @@ import ru.kirill.android_new_notes_project.R;
 import ru.kirill.android_new_notes_project.repo.CardData;
 import ru.kirill.android_new_notes_project.repo.CardSource;
 import ru.kirill.android_new_notes_project.repo.LocalRepository;
+import ru.kirill.android_new_notes_project.repo.LocalSharedPreferencesRepository;
 import ru.kirill.android_new_notes_project.ui.fragment_communication.Observer;
 
 public class MainNotesFragment extends Fragment implements OnItemClickListener {
@@ -50,7 +51,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initAdapter();
+        setupSource();
         initRecycler(view);
         setHasOptionsMenu(true);
         initRadioGroup(view);
@@ -92,6 +93,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
                     setCurrentSource(SOURCE_GF);
                     break;
             }
+            setupSource();
         }
     };
 
@@ -110,6 +112,23 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(KEY_SP,
                 Context.MODE_PRIVATE);
         return sharedPreferences.getInt(KEY_SP_CELL, SOURCE_ARRAY);
+    }
+
+    public void setupSource(){
+        switch (getCurrentSource()) {
+            case SOURCE_ARRAY:
+                data = new LocalRepository(requireContext().getResources()).init();
+                initAdapter();
+                break;
+            case SOURCE_SP:
+                data = new LocalSharedPreferencesRepository(requireContext().getSharedPreferences(KEY_SP,Context.MODE_PRIVATE)).init();
+                initAdapter();
+                break;
+            case SOURCE_GF:
+                //data = new FireStoreRepository(requireContext().getResources()).init();
+                //initAdapter();
+                break;
+        }
     }
 
     @Override
@@ -174,8 +193,8 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     }
 
     public void initAdapter(){
+        if(notesAdapter == null)
         notesAdapter = new NotesAdapter(this);
-        data = new LocalRepository(requireContext().getResources()).init();
         notesAdapter.setDataSource(data);
         notesAdapter.setOnItemClickListener(this);
     }
