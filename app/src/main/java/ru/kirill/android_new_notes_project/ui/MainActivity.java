@@ -1,6 +1,7 @@
 package ru.kirill.android_new_notes_project.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 
@@ -24,6 +25,15 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null){
             getSupportFragmentManager().beginTransaction().replace(R.id.activity_container,
                     MainNotesFragment.newInstance()).commit();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if (count == 0) {
+
+        } else {
+            getSupportFragmentManager().popBackStack();
         }
     }
 }

@@ -1,5 +1,7 @@
 package ru.kirill.android_new_notes_project.ui;
 
+import static ru.kirill.android_new_notes_project.repo.LocalSharedPreferencesRepository.KEY_SP_R;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,17 +36,21 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     RecyclerView recyclerView;
     CardSource data;
     DialogFragmentDeleteAll dialogFragmentDeleteAll;
-    CardData cardData;
+
+    static String KEY_SP = "key_1";
+    static String KEY_SP_CELL = "cell_1";
+
+    public static final int SOURCE_ARRAY = 1;
+    public static final int SOURCE_SP = 2;
+    public static final int SOURCE_GF = 3;
 
     public static MainNotesFragment newInstance() {
         MainNotesFragment fragment = new MainNotesFragment();
         return fragment;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main_notes, container, false);
     }
 
@@ -75,10 +81,6 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         }
     }
 
-    public static final int SOURCE_ARRAY = 1;
-    public static final int SOURCE_SP = 2;
-    public static final int SOURCE_GF = 3;
-
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -97,8 +99,6 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         }
     };
 
-    static String KEY_SP = "key_1";
-    static String KEY_SP_CELL = "cell_1";
 
     public void setCurrentSource(int currentSource) {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(KEY_SP,
@@ -121,7 +121,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
                 initAdapter();
                 break;
             case SOURCE_SP:
-                data = new LocalSharedPreferencesRepository(requireContext().getSharedPreferences(KEY_SP,Context.MODE_PRIVATE)).init();
+                data = new LocalSharedPreferencesRepository(requireContext().getSharedPreferences(KEY_SP_R,Context.MODE_PRIVATE)).init();
                 initAdapter();
                 break;
             case SOURCE_GF:
@@ -141,24 +141,10 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.action_add_note) : {
-                data.addCardData(new CardData("Empty note " + (data.size() + 1), "No content",
-                        myCalendar()));
+                data.addCardData(new CardData(myCalendar()));
                 notesAdapter.notifyItemInserted((data.size() - 1));
                 recyclerView.smoothScrollToPosition((data.size() - 1));
-
-                //редактировние заметри сразу при её создании
-                Observer observer = new Observer() {
-                    @Override
-                    public void receiveMessage(CardData cardData) {
-                        ((MainActivity) requireActivity()).getPublisher().unsubscribe(this);
-                        data.updateCardData((data.size() - 1), cardData);
-                        notesAdapter.notifyItemChanged((data.size() - 1));
-                    }
-                };
-                ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
-                ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.activity_container, EditNote.newInstance(data.getCardData(data.size() - 1))).addToBackStack(" ").commit();
-                //
-
+                editWindow((data.size() - 1));
                 return true;
             }
             case (R.id.action_clear_all) : {
@@ -188,12 +174,12 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
             case (R.id.action_delete): {
                 data.deleteCardData(menuPosition);
                 notesAdapter.notifyItemRemoved(menuPosition);
+                initAdapter();
                 return true;
             }
             case (R.id.action_update): {
                 data.updateCardData(menuPosition,
-                        new CardData("Empty note " + (menuPosition +1),
-                        "No content", myCalendar()));
+                        new CardData(myCalendar()));
                 notesAdapter.notifyItemChanged(menuPosition);
                 return true;
             }
@@ -227,16 +213,7 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(int position) {
-        Observer observer = new Observer() {
-            @Override
-            public void receiveMessage(CardData cardData) {
-                ((MainActivity) requireActivity()).getPublisher().unsubscribe(this);
-                data.updateCardData(position, cardData);
-                notesAdapter.notifyItemChanged(position);
-            }
-        };
-        ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
-        ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.activity_container, EditNote.newInstance(data.getCardData(position))).addToBackStack(" ").commit();
+        editWindow(position);
     }
 
     public String myCalendar() {
@@ -247,15 +224,34 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         String ww = "day of week";
 
         if (calendar.get(Calendar.DAY_OF_WEEK) == 1){ww = "Monday";}
-        else if (calendar.get(Calendar.DAY_OF_WEEK) == 2){ww = "Tuesday";}
-        else if (calendar.get(Calendar.DAY_OF_WEEK) == 3){ww = "Wednesday";}
-        else if (calendar.get(Calendar.DAY_OF_WEEK) == 4){ww = "Thursday";}
-        else if (calendar.get(Calendar.DAY_OF_WEEK) == 5){ww = "Friday";}
-        else if (calendar.get(Calendar.DAY_OF_WEEK) == 6){ww = "Saturday";}
-        else if (calendar.get(Calendar.DAY_OF_WEEK) == 7){ww = "Sunday";}
+        else if (calendar.get(Calendar.DAY_OF_WEEK) == 2){ww = "Tuesday";} else if (calendar.get(Calendar.DAY_OF_WEEK) == 3) {
+            ww = "Wednesday";
+        } else if (calendar.get(Calendar.DAY_OF_WEEK) == 4) {
+            ww = "Thursday";
+        } else if (calendar.get(Calendar.DAY_OF_WEEK) == 5) {
+            ww = "Friday";
+        } else if (calendar.get(Calendar.DAY_OF_WEEK) == 6) {
+            ww = "Saturday";
+        } else if (calendar.get(Calendar.DAY_OF_WEEK) == 7) {
+            ww = "Sunday";
+        }
 
         String date = "Date: " + dd + "." + mm + "." + yy + ", " + ww;
         return date;
+    }
+
+    public void editWindow(int position) {
+        Observer observer = new Observer() {
+            @Override
+            public void receiveMessage(CardData cardData) {
+                ((MainActivity) requireActivity()).getPublisher().unsubscribe(this);
+                data.updateCardData(position, cardData);
+                notesAdapter.notifyItemChanged(position);
+            }
+        };
+        ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
+        ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.activity_container, EditNote.newInstance(data.getCardData(position))).addToBackStack(" ").commit();
+
     }
 
 }

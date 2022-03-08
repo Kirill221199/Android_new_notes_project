@@ -21,6 +21,10 @@ public class CardData implements Parcelable {
         this.date = date;
     }
 
+    public CardData(String date) {
+        this.date = date;
+    }
+
     public CardData(String title, String content, String date) {
         this.title = title;
         this.content = content;

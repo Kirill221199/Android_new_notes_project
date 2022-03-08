@@ -35,17 +35,20 @@ public class EditNote extends Fragment {
         return fragment;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_edit_note, container, false);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setChanges(view);
+        saveChanges(view);
+    }
+
+    public void setChanges(View view){
         if (getArguments() != null) {
             cardData = getArguments().getParcelable("cardData");
             ((EditText) view.findViewById(R.id.edit_title)).setText(cardData.getTitle());
@@ -77,7 +80,9 @@ public class EditNote extends Fragment {
                 datePicker.show();
             }
         });
+    }
 
+    public void saveChanges(View view){
         view.findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View it) {
@@ -121,4 +126,7 @@ public class EditNote extends Fragment {
 
         return ww;
     }
+
+
+
 }

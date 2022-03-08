@@ -12,7 +12,6 @@ public class LocalRepository implements CardSource {
 
     protected List<CardData> dataSource;
     protected Resources resources;
-    protected String date;
 
     public LocalRepository(Resources resources) {
         dataSource = new ArrayList<CardData>();
