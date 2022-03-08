@@ -141,10 +141,24 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.action_add_note) : {
-                data.addCardData(new CardData("Empty note " + (data.size()+1), "No content",
+                data.addCardData(new CardData("Empty note " + (data.size() + 1), "No content",
                         myCalendar()));
-                notesAdapter.notifyItemInserted((data.size()-1));
-                recyclerView.smoothScrollToPosition((data.size()-1));
+                notesAdapter.notifyItemInserted((data.size() - 1));
+                recyclerView.smoothScrollToPosition((data.size() - 1));
+
+                //редактировние заметри сразу при её создании
+                Observer observer = new Observer() {
+                    @Override
+                    public void receiveMessage(CardData cardData) {
+                        ((MainActivity) requireActivity()).getPublisher().unsubscribe(this);
+                        data.updateCardData((data.size() - 1), cardData);
+                        notesAdapter.notifyItemChanged((data.size() - 1));
+                    }
+                };
+                ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
+                ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.activity_container, EditNote.newInstance(data.getCardData(data.size() - 1))).addToBackStack(" ").commit();
+                //
+
                 return true;
             }
             case (R.id.action_clear_all) : {
