@@ -27,13 +27,5 @@ public class MainActivity extends AppCompatActivity {
                     MainNotesFragment.newInstance()).commit();
         }
     }
-    @Override
-    public void onBackPressed() {
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count == 0) {
 
-        } else {
-            getSupportFragmentManager().popBackStack();
-        }
-    }
 }

@@ -251,7 +251,6 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
         };
         ((MainActivity) requireActivity()).getPublisher().subscribe(observer);
         ((MainActivity) requireActivity()).getSupportFragmentManager().beginTransaction().add(R.id.activity_container, EditNote.newInstance(data.getCardData(position))).addToBackStack(" ").commit();
-
     }
 
 }

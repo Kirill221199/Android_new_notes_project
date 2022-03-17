@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -46,6 +48,13 @@ public class EditNote extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setChanges(view);
         saveChanges(view);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 
     public void setChanges(View view){
@@ -94,6 +103,7 @@ public class EditNote extends Fragment {
                 ((MainActivity) requireActivity()).getSupportFragmentManager().popBackStack();
 
                 hideKeyboard(requireContext());
+
             }
         });
     }
@@ -126,7 +136,5 @@ public class EditNote extends Fragment {
 
         return ww;
     }
-
-
 
 }
