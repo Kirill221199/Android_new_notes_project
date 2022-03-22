@@ -26,6 +26,8 @@ import java.util.Calendar;
 import ru.kirill.android_new_notes_project.R;
 import ru.kirill.android_new_notes_project.repo.CardData;
 import ru.kirill.android_new_notes_project.repo.CardSource;
+import ru.kirill.android_new_notes_project.repo.FireStoreRepository;
+import ru.kirill.android_new_notes_project.repo.FireStoreResponse;
 import ru.kirill.android_new_notes_project.repo.LocalRepository;
 import ru.kirill.android_new_notes_project.repo.LocalSharedPreferencesRepository;
 import ru.kirill.android_new_notes_project.ui.fragment_communication.Observer;
@@ -125,8 +127,11 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener {
                 initAdapter();
                 break;
             case SOURCE_GF:
-                //data = new FireStoreRepository(requireContext().getResources()).init();
-                //initAdapter();
+                data = new FireStoreRepository().init(new FireStoreResponse(){
+                    public void initialized(CardSource cardSource) {
+                        initAdapter(); }
+                });
+                initAdapter();
                 break;
         }
     }
