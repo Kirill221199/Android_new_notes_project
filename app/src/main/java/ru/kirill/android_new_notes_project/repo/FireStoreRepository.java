@@ -110,6 +110,12 @@ public class FireStoreRepository implements CardSource{
     @Override
     public void updateCardData(int position, CardData newCardData) {
         dataSource.set(position, newCardData);
+        collectionReference.add(CardDataMapping.toDocument(newCardData)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                newCardData.setId(documentReference.getId());
+            }
+        });
     }
 
 }
