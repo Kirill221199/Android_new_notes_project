@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "198840803286",
+    "project_id": "android-new-notes-project",
+    "storage_bucket": "android-new-notes-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198840803286:android:99ddaf795377eb469e8e77",
+        "android_client_info": {
+          "package_name": "ru.kirill.android_new_notes_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198840803286-jal94t1jkd3flitsodqqjmcfj036mt5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNuXb1nslxRvDEESB0rz1G_dXTT-T84tk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198840803286-jal94t1jkd3flitsodqqjmcfj036mt5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
