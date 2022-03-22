@@ -88,23 +88,21 @@ public class FireStoreRepository implements CardSource{
 
     @Override
     public void ClearAllCardsData() {
-        dataSource.clear();
+        for (CardData cardData: dataSource) {
+            collectionReference.document(cardData.getId()).delete();
+        }
+        dataSource = new ArrayList<CardData>();
     }
 
     @Override
     public void addCardData(CardData cardData) {
         dataSource.add(cardData);
-        collectionReference.add(CardDataMapping.toDocument(cardData)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                cardData.setId(documentReference.getId());
-            }
-        });
     }
 
     @Override
     public void deleteCardData(int position) {
         dataSource.remove(position);
+        collectionReference.document(dataSource.get(position).getId()).delete();
     }
 
     @Override
