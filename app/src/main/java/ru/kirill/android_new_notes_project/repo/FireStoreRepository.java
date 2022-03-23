@@ -96,24 +96,38 @@ public class FireStoreRepository implements CardSource{
 
     @Override
     public void addCardData(CardData cardData) {
+        collectionReference.add(CardDataMapping.toDocument(cardData)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override public void onSuccess(DocumentReference documentReference) {
+                cardData.setId(documentReference.getId());
+            }
+        });
         dataSource.add(cardData);
     }
 
     @Override
     public void deleteCardData(int position) {
-        dataSource.remove(position);
         collectionReference.document(dataSource.get(position).getId()).delete();
+        dataSource.remove(position);
     }
 
     @Override
     public void updateCardData(int position, CardData newCardData) {
-        dataSource.set(position, newCardData);
-        collectionReference.add(CardDataMapping.toDocument(newCardData)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                newCardData.setId(documentReference.getId());
+        String id = newCardData.getId();
+        // Изменить документ по идентификатору
+        collectionReference.document(id).set(CardDataMapping.toDocument(newCardData));
+    }
+
+    @Override
+    public void clearCardData(int position, CardData cardData) {
+        collectionReference.document(dataSource.get(position).getId()).delete();
+        dataSource.remove(position);
+
+        collectionReference.add(CardDataMapping.toDocument(cardData)).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override public void onSuccess(DocumentReference documentReference) {
+                cardData.setId(documentReference.getId());
             }
         });
+        dataSource.add(cardData);
     }
 
 }

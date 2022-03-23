@@ -180,8 +180,13 @@ public class MainNotesFragment extends Fragment implements OnItemClickListener, 
                 return true;
             }
             case (R.id.action_update): {
-                data.updateCardData(menuPosition,
-                        new CardData(myCalendar()));
+                if (getCurrentSource() == 3){
+                    data.clearCardData(menuPosition,new CardData(myCalendar()));
+                }
+                else {
+                    data.updateCardData(menuPosition,
+                            new CardData(myCalendar()));
+                }
                 notesAdapter.notifyItemChanged(menuPosition);
                 return true;
             }

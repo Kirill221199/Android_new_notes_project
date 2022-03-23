@@ -78,4 +78,10 @@ public class LocalSharedPreferencesRepository implements CardSource{
         editor.putString(KEY_CELL_R, new GsonBuilder().create().toJson(dataSource));
         editor.apply();
     }
+
+    @Override
+    public void clearCardData(int position, CardData CardData) {
+
+    }
+
 }

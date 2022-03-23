@@ -81,4 +81,10 @@ public class LocalRepository implements CardSource {
     public void updateCardData(int position, CardData newCardData) {
         dataSource.set(position, newCardData);
     }
+
+    @Override
+    public void clearCardData(int position, CardData CardData) {
+
+    }
+
 }

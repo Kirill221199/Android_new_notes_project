@@ -10,5 +10,6 @@ public interface CardSource {
     public void addCardData(CardData cardData);
     public void deleteCardData (int position);
     public void updateCardData(int position, CardData newCardData);
+    public void clearCardData(int position, CardData CardData);
 
 }
